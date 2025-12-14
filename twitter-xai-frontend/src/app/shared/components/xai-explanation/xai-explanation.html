@@ -1,0 +1,13 @@
+<p-card header="AI Explanation">
+  <h4>Model Decision</h4>
+  <p>Sentiment: {{ tweet.sentiment }}</p>
+  <p>Confidence: {{ tweet.confidence | percent:'1.0-2' }}</p>
+  <p>Severity: {{ tweet.severity }}</p>
+
+  <h4 class="mt-3">Why?</h4>
+  <p>{{ tweet.explanation }}</p>
+
+  <small class="text-gray-500">
+    Explanation generated using XAI techniques
+  </small>
+</p-card>

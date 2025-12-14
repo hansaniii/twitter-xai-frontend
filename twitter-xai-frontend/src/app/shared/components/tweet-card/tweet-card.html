@@ -1,0 +1,8 @@
+<p-card>
+  <div [innerHTML]="highlight(tweet.text)"></div>
+
+  <p class="mt-2 text-sm">
+    Sentiment: <b>{{ tweet.sentiment }}</b> |
+    Confidence: {{ tweet.confidence | percent:'1.0-2' }}
+  </p>
+</p-card>
