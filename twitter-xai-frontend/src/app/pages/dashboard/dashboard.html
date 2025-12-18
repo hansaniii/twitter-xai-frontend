@@ -1,135 +1,113 @@
-<div class="dashboard-container">
+<p-panel header="Overall Sentiment Overview" class="mb-4 shadow-2 border-round-lg">
+  <div class="grid align-items-start">
 
-    <!-- ACCOUNT OVERVIEW -->
-<div class="account-overview">
-
-  <p-card class="account-card shadow-3">
-
-    <div class="account-header">
-      <h2>Account Sentiment Health</h2>
-      <p class="account-subtitle">
-        Overall emotional and risk profile of your Twitter account
-      </p>
+    <!-- Analyzed Text -->
+    <div class="col-12 md:col-6">
+      <div class="section">
+        <span class="section-title">Analyzed Text</span>
+        <p class="section-content text-color-secondary">
+          {{ analysis.text }}
+        </p>
+      </div>
     </div>
 
-    <div class="account-grid">
-
-      <!-- Overall Mood -->
-      <div class="account-metric">
-        <i class="pi pi-heart-fill text-green-500"></i>
-        <div>
-          <h3>{{ overallMood }}</h3>
-          <span>Overall Mood</span>
-        </div>
+    <!-- Sentiment -->
+    <div class="col-12 md:col-3">
+      <div class="section">
+        <span class="section-title">Sentiment</span>
+        <p-tag
+          class="mt-2"
+          [value]="analysis.sentiment | titlecase"
+          [severity]="analysis.sentiment === 'positive' ? 'success' :
+                       analysis.sentiment === 'negative' ? 'danger' : 'info'">
+        </p-tag>
       </div>
-
-      <!-- Risk Level -->
-      <div class="account-metric">
-        <i
-          class="pi pi-shield"
-          [ngClass]="riskLevelClass">
-        </i>
-        <div>
-          <h3>{{ overallRisk }}</h3>
-          <span>Account Risk Level</span>
-        </div>
-      </div>
-
-      <!-- Negative Exposure -->
-      <div class="account-metric">
-        <i class="pi pi-exclamation-circle text-red-500"></i>
-        <div>
-          <h3>{{ negativeCount }}</h3>
-          <span>Negative Tweets</span>
-        </div>
-      </div>
-
-      <!-- Stability -->
-      <div class="account-metric">
-        <i class="pi pi-chart-line text-blue-500"></i>
-        <div>
-          <h3>{{ stabilityScore }}%</h3>
-          <span>Emotional Stability</span>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Summary Statement -->
-    <div class="account-summary">
-      <i class="pi pi-info-circle mr-2"></i>
-      {{ accountSummary }}
+    <!-- Confidence -->
+    <div class="col-12 md:col-3">
+      <div class="section">
+        <span class="section-title">Confidence Level</span>
+        <p-progressBar
+          class="mt-2"
+          [value]="analysis.confidence * 100">
+        </p-progressBar>
+        <small class="text-color-secondary">
+          {{ analysis.confidence | percent }}
+        </small>
+      </div>
     </div>
 
-  </p-card>
+    <!-- Explanation -->
+    <div class="col-12 mt-3">
+      <div class="section">
+        <span class="section-title">Model Explanation</span>
+        <p class="section-content">
+          {{ analysis.explanation }}
+        </p>
+      </div>
+    </div>
 
-</div>
+  </div>
+</p-panel>
 
+<div class="grid">
 
-  <!-- Header -->
-  <div class="dashboard-header">
-    <h2>Sentiment Analysis Dashboard</h2>
-    <p class="subtitle">
-      Explainable sentiment insights from your recent tweets
-    </p>
+  <!-- Positive Indicators -->
+  <div class="col-12 md:col-4">
+    <p-panel
+      header="Positive Indicators"
+      class="h-full shadow-1 border-left-3 border-green-500">
+
+      <ul class="indicator-list">
+        @for (k of positive; track k.token) {
+          <li>
+            <span class="indicator-token positive">{{ k.token }}</span>
+            <span class="indicator-impact">
+              +{{ k.impact | number:'1.2-2' }}
+            </span>
+          </li>
+        }
+      </ul>
+
+    </p-panel>
   </div>
 
-  <!-- Tweet Cards -->
-  <div class="tweet-grid">
-    @for (tweet of analyses; track tweet.id) {
+  <!-- Negative Indicators -->
+  <div class="col-12 md:col-4">
+    <p-panel
+      header="Negative Indicators"
+      class="h-full shadow-1 border-left-3 border-red-500">
 
-      <p-card class="tweet-card shadow-2">
+      <ul class="indicator-list">
+        @for (k of negative; track k.token) {
+          <li>
+            <span class="indicator-token negative">{{ k.token }}</span>
+            <span class="indicator-impact">
+              {{ k.impact | number:'1.2-2' }}
+            </span>
+          </li>
+        }
+      </ul>
 
-        <!-- Tweet Content -->
-        <div class="tweet-text">
-          <i class="pi pi-twitter text-blue-500 mr-2"></i>
-          {{ tweet.text }}
-        </div>
-
-        <!-- Meta Info -->
-        <div class="meta-row">
-
-          <p-tag
-            [value]="tweet.sentiment | titlecase"
-            [severity]="tweet.sentiment === 'positive' ? 'success' :
-                         tweet.sentiment === 'negative' ? 'danger' : 'info'">
-          </p-tag>
-
-          <div class="confidence">
-            <i class="pi pi-chart-line mr-1"></i>
-            {{ tweet.confidence | percent:'1.0-1' }} confidence
-          </div>
-
-          <span
-            class="severity"
-            [ngClass]="tweet.sentiment">
-            {{ tweet.severity }}
-          </span>
-
-        </div>
-
-        <!-- Explanation -->
-        <div class="explanation-box">
-          <i class="pi pi-info-circle mr-2"></i>
-          {{ tweet.explanation }}
-        </div>
-
-        <!-- Keywords -->
-        <div class="keywords">
-          <span class="keyword-title">Key Influencing Words</span>
-
-          <div class="chip-group">
-            @for (key of tweet.keywords; track key.token) {
-              <p-chip
-                [label]="key.token"
-                [ngClass]="key.polarity">
-              </p-chip>
-            }
-          </div>
-        </div>
-
-      </p-card>
-
-    }
+    </p-panel>
   </div>
+
+  <!-- Neutral Indicators -->
+  <div class="col-12 md:col-4">
+    <p-panel
+      header="Neutral Indicators"
+      class="h-full shadow-1 border-left-3 border-gray-400">
+
+      <ul class="indicator-list">
+        @for (k of neutral; track k.token) {
+          <li>
+            <span class="indicator-token neutral">{{ k.token }}</span>
+          </li>
+        }
+      </ul>
+
+    </p-panel>
+  </div>
+
 </div>

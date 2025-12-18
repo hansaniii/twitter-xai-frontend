@@ -31,9 +31,10 @@ export class LoginComponent {
     this.analysisService.analyzeSampleText(sampleText)
       .subscribe({
         next: (res) => {
+          console.log('Analysis result:', res);
           const analysis = [{
             id: 1,
-            text: res.analyses.cleaned_text,
+            text: res.analysis.cleaned_text,
             sentiment: res.analysis.sentiment,
             confidence: res.analysis.confidence,
             severity: res.analysis.severity,

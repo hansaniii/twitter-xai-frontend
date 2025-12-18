@@ -7,9 +7,15 @@ export interface KeywordImpact {
 export interface TweetAnalysis {
   id: number;
   text: string;
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: 'positive' | 'negative' | 'neutral'; 
   confidence: number;
-  severity: string;
-  keywords: KeywordImpact[];
+  severity: 'low' | 'medium' | 'high';
+  keywords: {
+    token: string;
+    impact: number;
+    polarity: string;
+  }[];
   explanation: string;
 }
+
+
